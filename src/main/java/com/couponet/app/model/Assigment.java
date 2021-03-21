@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 
@@ -19,7 +20,7 @@ public class Assigment {
     @Id
     private int id;
 
-    @OneToOne
+    @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
