@@ -18,9 +18,8 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private float price;
+    private int stock;
+    private int maxPerUser;
     private LocalDateTime registrationTime = LocalDateTime.now();
 
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private CouponType couponType;
 }

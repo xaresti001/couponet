@@ -27,4 +27,9 @@ public class Assigment {
     private Coupon coupon;
 
     private LocalDateTime registrationDateTime = LocalDateTime.now();
+
+    public Assigment(User user, Coupon coupon) {
+        this.user = user;
+        this.coupon = coupon;
+    }
 }
