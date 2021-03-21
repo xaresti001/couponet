@@ -39,9 +39,24 @@ public class AssigmentService {
         return assigmentRepo.findAssigmentsByUser_Id(userId);
     }
 
-    public boolean deleteAssigmentById(int assigmentId){
+/*    public boolean deleteAssigmentById(int assigmentId){
         boolean control = false;
         if (assigmentRepo.existsById(assigmentId)){
+            assigmentRepo.deleteById(assigmentId);
+            control = true;
+        }
+        return control;
+    }*/
+
+    public boolean deleteAssigmentById(int assigmentId){
+        boolean control = false;
+        Optional<Assigment> foundAssigment = assigmentRepo.findById(assigmentId);
+        if (foundAssigment.isPresent()){
+            // Update Coupon Stock
+            foundAssigment.get().getCoupon().setStock(foundAssigment.get().getCoupon().getStock()+1);
+            couponRepo.save(foundAssigment.get().getCoupon());
+
+            // Delete Assigment
             assigmentRepo.deleteById(assigmentId);
             control = true;
         }
