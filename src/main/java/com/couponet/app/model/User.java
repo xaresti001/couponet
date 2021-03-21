@@ -17,6 +17,7 @@ public class User {
     private int id;
     private String name;
     private String lastName;
+    private int telephoneNumber;
     private LocalDateTime registrationDateTime = LocalDateTime.now();
 
     private enum Role{
