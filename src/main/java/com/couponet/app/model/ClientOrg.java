@@ -7,23 +7,22 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Coupon {
+@AllArgsConstructor
+public class ClientOrg {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private float price;
-    private int stock;
-    private int maxPerUser;
-    private LocalDateTime registrationTime = LocalDateTime.now();
+    private String name;
 
-    @ManyToOne
+    @OneToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private ClientOrg clientOrg;
+    private User owner;
+
+
 
 }
