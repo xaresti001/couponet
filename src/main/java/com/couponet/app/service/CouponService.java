@@ -31,6 +31,10 @@ public class CouponService {
         return tempCoupon;
     }
 
+    public List<Coupon> findCouponsByClientOrgId(int clientOrgId){
+        return couponRepo.findCouponsByClientOrg_Id(clientOrgId);
+    }
+
     public boolean deleteCouponById(int couponId){
         boolean control = false;
         if (couponRepo.existsById(couponId)){
