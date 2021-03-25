@@ -11,9 +11,9 @@ import com.couponet.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class viewController {
 
     // NULL object may be obtained... This must be fixed
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public String user(@RequestParam("userId") int userId, ModelMap modelMap){
+    public String user(@ModelAttribute("userId") int userId, ModelMap modelMap){
         User user = userService.findUserById(userId);
         List<Assigment> userAssigments = assigmentService.findAssigmentsByUserId(userId);
         modelMap.clear();
@@ -70,13 +70,33 @@ public class viewController {
 
     // NULL object may be obtained... This must be fixed
     @RequestMapping(value = "/org", method = RequestMethod.GET)
-    public String org (@RequestParam("clientOrgId") int clientOrgId, ModelMap modelMap){
+    public String org (@ModelAttribute("clientOrgId") int clientOrgId, ModelMap modelMap){
         ClientOrg clientOrg = clientOrgService.findClientOrgById(clientOrgId);
         List<Coupon> clientOrgCoupons = couponService.findCouponsByClientOrgId(clientOrgId);
         modelMap.clear();
         modelMap.addAttribute("clientOrg", clientOrg);
         modelMap.addAttribute("clientOrgCoupons", clientOrgCoupons);
         return "org";
+    }
+
+    @RequestMapping(value = "/org/register", method = RequestMethod.GET)
+    public String registerOrg(ModelMap modelMap){
+        modelMap.addAttribute("orgForm", new ClientOrg()); // Send empty object
+        return "registerOrg";
+    }
+
+    @RequestMapping(value = "/user/register", method = RequestMethod.GET)
+    public String registerUser(ModelMap modelMap){
+        modelMap.addAttribute("userForm", new User()); // Send empty object
+        return "registerUser";
+    }
+
+    // NULL object may be obtained... This must be fixed
+    @RequestMapping(value = "/user/register/send", method = RequestMethod.POST)
+    public String sendRegisterUser(@ModelAttribute User user, ModelMap modelMap){
+        userService.createUser(user);
+        modelMap.clear(); // Compulsory view purge
+        return "redirect:/user/register";
     }
 
 
