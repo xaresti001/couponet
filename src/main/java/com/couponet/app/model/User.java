@@ -13,8 +13,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
+
     @Id
     private int id;
+
     private String name;
     private String lastName;
     private int telephoneNumber;

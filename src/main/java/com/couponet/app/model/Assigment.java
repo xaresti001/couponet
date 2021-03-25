@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Assigment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
