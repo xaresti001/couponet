@@ -28,5 +28,6 @@ public class User {
         MANAGER,
         ADMIN
     }
+
     private Role role;
 }
