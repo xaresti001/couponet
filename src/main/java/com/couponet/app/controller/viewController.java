@@ -68,6 +68,7 @@ public class viewController {
         return "orgList";
     }
 
+    // NULL object may be obtained... This must be fixed
     @RequestMapping(value = "/org", method = RequestMethod.GET)
     public String org (@RequestParam("clientOrgId") int clientOrgId, ModelMap modelMap){
         ClientOrg clientOrg = clientOrgService.findClientOrgById(clientOrgId);
