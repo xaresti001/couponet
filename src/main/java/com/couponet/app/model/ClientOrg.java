@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -22,6 +23,8 @@ public class ClientOrg {
     @OneToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User owner;
+
+    private LocalDateTime registrationDateTime = LocalDateTime.now();
 
 
 
