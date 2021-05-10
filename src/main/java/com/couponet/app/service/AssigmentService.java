@@ -5,6 +5,7 @@ import com.couponet.app.model.Coupon;
 import com.couponet.app.model.User;
 import com.couponet.app.repo.AssigmentRepo;
 import com.couponet.app.repo.CouponRepo;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Data
 public class AssigmentService {
 
     private final AssigmentRepo assigmentRepo;

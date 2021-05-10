@@ -25,6 +25,12 @@ public class Coupon {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private ClientOrg clientOrg;
+    private User ownerUser;
 
+    public Coupon(float price, int stock, int maxPerUser, User ownerUser) {
+        this.price = price;
+        this.stock = stock;
+        this.maxPerUser = maxPerUser;
+        this.ownerUser = ownerUser;
+    }
 }

@@ -2,6 +2,7 @@ package com.couponet.app.service;
 
 import com.couponet.app.model.Coupon;
 import com.couponet.app.repo.CouponRepo;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Data
 public class CouponService {
 
     private final CouponRepo couponRepo;
@@ -31,8 +33,8 @@ public class CouponService {
         return tempCoupon;
     }
 
-    public List<Coupon> findCouponsByClientOrgId(int clientOrgId){
-        return couponRepo.findCouponsByClientOrg_Id(clientOrgId);
+    public List<Coupon> findAllCouponsByOwnerId(int ownerId){
+        return couponRepo.findCouponsByOwnerUser_Id(ownerId);
     }
 
     public boolean deleteCouponById(int couponId){

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aginte panela</title>
+</head>
+<body>
+<h1>AGINTE PANELA</h1>
+<h2>Sortutako deskontu-kupoiak</h2>
+<table style="border:4px">
+  <tr>
+    <th>Identifikazioa</th>
+    <th>Prezioa</th>
+    <th>Stock</th>
+    <th>Max. pertsonako</th>
+    <th>Sortze data</th>
+    <th>Ekintza</th>
+  </tr>
+  <tr th:each="coupon : ${couponList}">
+    <td th:text="${coupon.id}"></td>
+    <td th:text="${coupon.price} + '€'"></td>
+    <td th:text="${coupon.stock}"></td>
+    <td th:text="${coupon.maxPerUser}"></td>
+    <td th:text="${coupon.registrationTime}"></td>
+    <td>
+      <form th:action="@{/panel/home/coupon/delete}" method="post">
+        <input type="hidden" name="couponId" th:value="${coupon.id}">
+        <button type="submit">Ezabatu!</button>
+      </form>
+    </td>
+  </tr>
+</table>
+<h3>Kupoi berria sortu</h3>
+<form th:action="@{/panel/home/coupon/create}" method="post" th:object="${newCoupon}">
+  <label>
+    Kantitatea: <input type="number" th:field="*{stock}" placeholder="Kantitatea" required="required">
+  </label>
+  </br>
+  <label>
+    Gehienezkoa pertsonako: <input type="number" th:field="*{maxPerUser}" placeholder="Gehienezkoa pertsonako" required="required">
+  </label>
+  </br>
+  <label>
+    Prezioa: <input type="number" min="0" step="0.01" th:field="*{price}" placeholder="Prezioa" required="required">
+  </label>
+  </br>
+  <button type="submit">Sortu!</button>
+</form>
+
+<h1>Kupoi salmenta berria</h1>
+Sartu bezeroan informazioa: </br>
+<form th:action="@{/panel/home/client/create}" th:object="${newUser}" method="post">
+  NAN zenbakia: <input th:field="*{id}" type="number" placeholder="NAN zenbakia" required="required"></br>
+  Izena: <input th:field="*{name}" type="text" placeholder="Izena" required="required"></br>
+  Abizena: <input th:field="*{lastName}" type="text" placeholder="Abizena" required="required"></br>
+  Email helbidea: <input th:field="*{email}" type="email" placeholder="Email helbidea" required="required"></br>
+  <input th:field="*{password}" type="hidden" value=" "></br>
+  <button type="submit">Kupoiak esleitu!</button>
+</form>
+
+</body>
+</html>

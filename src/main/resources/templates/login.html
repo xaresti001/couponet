@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Saioa Hasi</title>
+</head>
+<body>
+<h1>Saioa hasi</h1>
+<form method="post" th:action="@{/login}" th:object="${newUser}">
+  <label>
+    <input type="email" th:field="*{email}" placeholder="Email" required="required"/>
+  </label>
+  <label>
+    <input type="password" th:field="*{password}" placeholder="Pasahitza" required="required">
+  </label>
+    <button type="submit">Saioa hasi!</button>
+</form>
+
+<h1>Erregistratu</h1>
+<form th:action="@{/register}" th:object="${newUser}" method="post">
+    NAN zenbakia: <input th:field="*{id}" type="number" placeholder="NAN zenbakia" required="required"></br>
+    Izena: <input th:field="*{name}" type="text" placeholder="Izena" required="required"></br>
+    Abizena: <input th:field="*{lastName}" type="text" placeholder="Abizena" required="required"></br>
+    Email helbidea: <input th:field="*{email}" type="email" placeholder="Email helbidea" required="required"></br>
+    Pasahitza: <input th:field="*{password}" type="password" placeholder="Pasahitza" required="required"></br>
+    <button type="submit">Erregistratu!</button>
+</form>
+
+</body>
+</html>
