@@ -38,26 +38,14 @@ public class AssigmentService {
         return tempAssigment;
     }
 
-    public List<Assigment> findAssigmentsByUserId(int userId){
-        return assigmentRepo.findAssigmentsByUser_Id(userId);
-    }
-
-/*    public boolean deleteAssigmentById(int assigmentId){
-        boolean control = false;
-        if (assigmentRepo.existsById(assigmentId)){
-            assigmentRepo.deleteById(assigmentId);
-            control = true;
-        }
-        return control;
-    }*/
-
     public boolean deleteAssigmentById(int assigmentId){
         boolean control = false;
         Optional<Assigment> foundAssigment = assigmentRepo.findById(assigmentId);
         if (foundAssigment.isPresent()){
             // Update Coupon Stock
-            foundAssigment.get().getCoupon().setStock(foundAssigment.get().getCoupon().getStock()+1);
-            couponRepo.save(foundAssigment.get().getCoupon());
+            Coupon tempCoupon = foundAssigment.get().getCoupon();
+            tempCoupon.setStock(tempCoupon.getStock()+1);
+            couponRepo.save(tempCoupon);
 
             // Delete Assigment
             assigmentRepo.deleteById(assigmentId);
@@ -66,25 +54,18 @@ public class AssigmentService {
         return control;
     }
 
-/*    public Assigment createAssigment(Assigment newAssigment){
-        Assigment tempAssigment = null;
-        if (!assigmentRepo.existsById(newAssigment.getId())){
-            tempAssigment = assigmentRepo.save(newAssigment);
-        }
-        return tempAssigment;
-    }*/
-
     // Check Coupon Stock
     // Check User's Assigments (Check Max Coupons Per User)
-    public Assigment createAssigment(User user, Coupon coupon){
+    public Assigment createAssigment(Assigment newAssigment){
         Assigment tempAssigment = null;
-        if (assigmentRepo.findAssigmentsByUser_Id(user.getId()).size()<coupon.getMaxPerUser() && coupon.getStock()>0){
+        if (assigmentRepo.findAssigmentsByClientId(newAssigment.getClientId()).size()<newAssigment.getCoupon().getMaxPerUser() && newAssigment.getCoupon().getStock()>0){
             // Create Assigment
-            tempAssigment = assigmentRepo.save(new Assigment(user, coupon));
+            tempAssigment = assigmentRepo.save(newAssigment);
 
             // Update Coupon Stock
-            coupon.setStock(coupon.getStock()-1);
-            couponRepo.save(coupon);
+            Coupon tempCoupon = newAssigment.getCoupon();
+            tempCoupon.setStock(tempCoupon.getStock()-1);
+            couponRepo.save(tempCoupon);
         }
         return tempAssigment;
     }
@@ -98,4 +79,13 @@ public class AssigmentService {
         }
         return tempAssigment;
     }
+
+    public List<Assigment> findAssigmentsByOwnerId(int ownerId){
+        return assigmentRepo.findAssigmentsByCoupon_OwnerUser_Id(ownerId);
+    }
+
+    public List<Assigment> findAssigmentsByClientId(int userId){
+        return assigmentRepo.findAssigmentsByClientId(userId);
+    }
+
 }

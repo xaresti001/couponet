@@ -19,9 +19,7 @@ public class Assigment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    private int clientId;
 
     @OneToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -29,8 +27,8 @@ public class Assigment {
 
     private LocalDateTime registrationDateTime = LocalDateTime.now();
 
-    public Assigment(User user, Coupon coupon) {
-        this.user = user;
+    public Assigment(int clientId, Coupon coupon) {
+        this.clientId = clientId;
         this.coupon = coupon;
     }
 }

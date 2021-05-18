@@ -1,14 +1,15 @@
 package com.couponet.app.viewController;
 
+import com.couponet.app.model.Assigment;
 import com.couponet.app.model.Coupon;
 import com.couponet.app.model.CouponForm;
 import com.couponet.app.model.User;
 import com.couponet.app.service.AssigmentService;
 import com.couponet.app.service.CouponService;
 import com.couponet.app.service.UserService;
-import jdk.internal.icu.text.NormalizerBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,7 @@ public class viewController {
     public String viewLogin(@RequestParam(name = "registrationError", required = false, defaultValue = "false") boolean registrationError,
                             ModelMap modelMap){
         modelMap.addAttribute("newUser", new User());
+        modelMap.addAttribute("registrationError", registrationError);
         return "login";
     }
 
@@ -59,16 +61,30 @@ public class viewController {
 
     @RequestMapping(value = "/panel/home", method = RequestMethod.GET)
     public String viewPanel(ModelMap modelMap,
+                            @RequestParam(name = "errorCreatingAssigment", required = false, defaultValue = "false") boolean errorCreatingAssigment,
+                            @RequestParam(name = "assigmentCreated", required = false, defaultValue = "false") boolean assigmentCreated,
                             @RequestParam(name = "errorDeletingCoupon", required = false, defaultValue = "false") boolean errorDeletingCoupon,
-                            @RequestParam(name = "couponCreated", required = false, defaultValue = "false") boolean couponCreated){
+                            @RequestParam(name = "errorDeletingAssigment", required = false, defaultValue = "false") boolean errorDeletingAssigment,
+                            @RequestParam(name = "couponCreated", required = false, defaultValue = "false") boolean couponCreated,
+                            @RequestParam(name = "clientSearch", required = false, defaultValue = "0") int clientId){
         User loggedUser = userService.getLoggedUser();
         if (loggedUser != null){
             modelMap.addAttribute("newUser", new User());
             modelMap.addAttribute("newCoupon", new CouponForm());
             modelMap.addAttribute("couponList", couponService.findAllCouponsByOwnerId(loggedUser.getId()));
 
+            if (clientId == 0){
+                modelMap.addAttribute("assigmentList", assigmentService.findAssigmentsByOwnerId(loggedUser.getId()));
+            }
+            else{
+                modelMap.addAttribute("assigmentList", assigmentService.findAssigmentsByClientId(clientId));
+            }
+
             // Error messages
+            modelMap.addAttribute("errorCreatingAssigment", errorCreatingAssigment);
+            modelMap.addAttribute("assigmentCreated", assigmentCreated);
             modelMap.addAttribute("errorDeletingCoupon", errorDeletingCoupon);
+            modelMap.addAttribute("errorDeletingAssigment", errorDeletingAssigment);
             modelMap.addAttribute("couponCreated", couponCreated);
             return "panel";
         }
@@ -81,9 +97,11 @@ public class viewController {
     @RequestMapping(value = "/panel/home/coupon/delete", method = RequestMethod.POST)
     public String deleteCoupon(@RequestParam(name = "couponId") int couponId,
                                ModelMap modelMap){
+        User loggedUser = userService.getLoggedUser();
         Coupon coupon = couponService.findCouponById(couponId);
-        if (coupon != null){
+        if (loggedUser != null && coupon != null){
             couponService.deleteCouponById(couponId);
+            modelMap.clear();
             return "redirect:/panel/home";
         }
         else{
@@ -92,7 +110,8 @@ public class viewController {
     }
 
     @RequestMapping(value = "/panel/home/coupon/create", method = RequestMethod.POST)
-    public String createCoupon(@ModelAttribute(name = "newCoupon") CouponForm couponForm){
+    public String createCoupon(@ModelAttribute(name = "newCoupon") CouponForm couponForm,
+                               ModelMap modelMap){
         User loggedUser = userService.getLoggedUser();
         if (loggedUser != null){
             Coupon newCoupon = new Coupon(couponForm.getPrice(),
@@ -100,37 +119,48 @@ public class viewController {
                     couponForm.getMaxPerUser(),
                     loggedUser);
             couponService.createCoupon(newCoupon);
+            modelMap.clear();
             return "redirect:/panel/home?couponCreated=true";
         }
         else{
-            return "redirect:/?notAlloed";
+            return "redirect:/?notAllowed";
         }
     }
 
-    @RequestMapping(value = "/panel/home/client/create", method = RequestMethod.POST)
-    public String createClient(@ModelAttribute(name = "newUser") User newClient,
-                               ModelMap modelMap){
-        User foundUser = userService.findUserById(newClient.getId());
-        if (foundUser == null){
-            User savedUser = userService.createUser(newClient);
-            return "redirect:/panel/home/client?clientId?=" + savedUser.getId();
+    @RequestMapping(value = "/panel/home/assigment/delete", method = RequestMethod.POST)
+    public String deleteAssigment(@RequestParam(name = "assigmentId") int assigmentId,
+                                  ModelMap modelMap){
+        User loggedUser = userService.getLoggedUser();
+        Assigment assigment = assigmentService.findAssigmentById(assigmentId);
+        if (loggedUser != null && assigment != null){
+            assigmentService.deleteAssigmentById(assigmentId);
+            modelMap.clear();
+            return "redirect:/panel/home";
         }
         else{
-            return "redirect:/panel/home/client?clientId?=" + foundUser.getId();
+            return "redirect:/panel/home?errorDeletingAssigment=true";
         }
     }
 
-    @RequestMapping(value = "/panel/home/client", method = RequestMethod.GET)
-    public String viewClient(@RequestParam(name = "clientId") int clientId,
-                             ModelMap modelMap){
-        User client = userService.findUserById(clientId);
-        if (client != null){
-            modelMap.addAttribute("client", client);
-
+    @RequestMapping(value = "/panel/home/assigment/create", method = RequestMethod.POST)
+    public String createAssigment(@RequestParam(name = "clientId") int clientId,
+                                  @RequestParam(name = "couponId") int couponId,
+                                  ModelMap modelMap){
+        User loggedUser = userService.getLoggedUser();
+        Coupon coupon = couponService.findCouponById(couponId);
+        if (loggedUser != null && coupon != null){
+            Assigment newAssigment = assigmentService.createAssigment(new Assigment(clientId, coupon));
+            if (newAssigment != null){
+                modelMap.clear();
+                return "redirect:/panel/home?assigmentCreated=true";
+            }else{
+                return "redirect:/panel/home?errorCreatingAssigment=true";
+            }
         }
-
+        else{
+            return "redirect:/?notAllowed";
+        }
     }
-
 
 
 

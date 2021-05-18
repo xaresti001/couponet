@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface AssigmentRepo extends JpaRepository<Assigment, Integer> {
-    List<Assigment> findAssigmentsByUser_Id(int userId);
+    List<Assigment> findAssigmentsByClientId(int userId);
+    List<Assigment> findAssigmentsByCoupon_OwnerUser_Id(int ownerUserId);
 }
