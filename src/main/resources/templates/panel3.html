@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aginte panela</title>
+</head>
+<body>
+<h1>AGINTE PANELA</h1>
+<h2>Sortutako deskontu-kupoiak</h2>
+<table style="border:4px">
+    <tr>
+        <th>Identifikazioa</th>
+        <th>Prezioa</th>
+        <th>Stock</th>
+        <th>Max. pertsonako</th>
+        <th>Sortze data</th>
+        <th>Ekintza</th>
+    </tr>
+    <tr th:each="coupon : ${couponList}">
+        <td th:text="${coupon.id}"></td>
+        <td th:text="${coupon.price} + '€'"></td>
+        <td th:text="${coupon.stock}"></td>
+        <td th:text="${coupon.maxPerUser}"></td>
+        <td th:text="${coupon.registrationTime}"></td>
+        <td>
+            <form th:action="@{/panel/home/coupon/delete}" method="post">
+                <input type="hidden" name="couponId" th:value="${coupon.id}"/>
+                <button type="submit">Ezabatu!</button>
+            </form>
+        </td>
+    </tr>
+</table>
+<h3>Kupoi berria sortu</h3>
+<form th:action="@{/panel/home/coupon/create}" method="post" th:object="${newCoupon}">
+    <label>
+        Kantitatea: <input type="number" th:field="*{stock}" placeholder="Kantitatea" required="required"/>
+    </label>
+    <br/>
+    <label>
+        Gehienezkoa pertsonako: <input type="number" th:field="*{maxPerUser}" placeholder="Gehienezkoa pertsonako"
+                                       required="required"/>
+    </label>
+    <br/>
+    <label>
+        Prezioa: <input type="number" min="0" step="0.01" th:field="*{price}" placeholder="Prezioa"
+                        required="required"/>
+    </label>
+    <br/>
+    <button type="submit">Sortu!</button>
+</form>
+
+<h1>Assigments</h1>
+<form action="/panel/home" method="get">
+    <label>
+        <input name="clientSearch" type="number" required="required"/>
+    </label>
+    <button type="submit">Bilatu!</button>
+</form>
+
+<table style="border:4px">
+    <tr>
+        <th>Bezeroaren ID</th>
+        <th>Kupoiaren ID</th>
+        <th>Prezioa</th>
+        <th>Erosketa data</th>
+        <th>Ekintza</th>
+    </tr>
+    <tr th:each="assigment : ${assigmentList}">
+        <td th:text="${assigment.id}"></td>
+        <td th:text="${assigment.clientId}"></td>
+        <td th:text="${assigment.coupon.price}"></td>
+        <td th:text="${assigment.registrationDateTime}"></td>
+        <td>
+            <form th:action="@{/panel/home/assigment/delete}" method="post">
+                <input type="hidden" name="assigmentId" th:value="${assigment.id}"/>
+                <button type="submit">Ezabatu!</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<h1>Kupoi salmenta berria</h1>
+<form th:action="@{/panel/home/assigment/create}" method="post">
+    <label>
+        <input name="clientId" required="required" type="number"/>
+    </label>
+    <label>
+        <select name="couponId" required="required">
+            <option th:each="couponOp : ${couponList}" th:value="${couponOp.id}"
+                    th:text="'ID: ' + ${couponOp.id} + ', PREZIOA: ' + ${couponOp.price} + '€'"></option>
+        </select>
+    </label>
+    <button type="submit">Kupoiak esleitu!</button>
+</form>
+
+</body>
+</html>
