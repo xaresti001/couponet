@@ -118,6 +118,8 @@
     <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
         <div class="u-expanded-width u-table u-table-responsive u-table-1">
             <h2>Sortutako deskontu-kupoiak</h2>
+            <p th:if="${errorDeletingCoupon} == true" style="color:red;">Errorea gertatu da kupoia ezabatzean!</p>
+            <p th:if="${couponDeleted} == true" style="color:green;">Kupoia ondo ezabatu da!</p>
             <table class="u-table-entity u-table-entity-1">
                 <colgroup>
                     <col width="16.6%">
@@ -175,17 +177,21 @@
                                 required="required"/>
             </label>
             <br/>
-            <button type="submit">Sortu!</button>
+            <button type="submit" class="u-btn u-btn-submit u-button-style">Sortu!</button>
+            <p th:if="${couponCreated} == true" style="color:green;">Kupoia ondo sortu da!</p>
         </form>
         <div class="u-expanded-width u-table u-table-responsive u-table-1">
-            <h2>Saldutako deskontu-kupoiak</h2>
-            <form action="/panel/home" method="get">
+            <h2>Kupoien salmenta-kudeaketa</h2>
+            <form th:if="${couponList.size()} != 0" action="/panel/home" method="get">
                 <label>
                     Bilatu: <input name="clientSearch" type="number" required="required"/>
                 </label>
-                <button type="submit">Bilatu!</button>
+                <button type="submit" class="u-btn u-btn-submit u-button-style">Bilatu!</button>
             </form>
-            <table class="u-table-entity u-table-entity-1">
+            <p th:if="${errorDeletingAssigment} == true" style="color:red;">Errorea gertatu da salmenta ezabatzean!</p>
+            <p th:if="${assigmentDeleted} == true" style="color:green;">Salmenta ondo ezabatu da!</p>
+            <p th:if="${couponList.size()} == 0" style="color:red;">Ez duzu kupoirik une honetan! Sortu ezazu kupoi bat salmenten kudeaketa egin ahal izateko!</p>
+            <table th:if="${couponList.size()} != 0" class="u-table-entity u-table-entity-1">
                 <colgroup>
                     <col width="20%">
                     <col width="20%">
@@ -195,8 +201,8 @@
                 </colgroup>
                 <thead class="u-grey-50 u-table-header u-table-header-1">
                 <tr style="height: 34px;">
+                    <th class="u-border-1 u-border-grey-50 u-table-cell">Salmentaren ID</th>
                     <th class="u-border-1 u-border-grey-50 u-table-cell">Bezeroaren ID</th>
-                    <th class="u-border-1 u-border-grey-50 u-table-cell">Kupoiaren ID</th>
                     <th class="u-border-1 u-border-grey-50 u-table-cell">Prezioa</th>
                     <th class="u-border-1 u-border-grey-50 u-table-cell">Erosketa data</th>
                     <th class="u-border-1 u-border-grey-50 u-table-cell">Ekintza</th>
@@ -222,57 +228,24 @@
                 </tbody>
             </table>
         </div>
-        <h3>Kupoi salmenta berria</h3>
-        <form th:action="@{/panel/home/assigment/create}" method="post">
+        <h3 th:if="${couponList.size()} != 0">Kupoi salmenta berria egin</h3>
+        <form th:if="${couponList.size()} != 0" th:action="@{/panel/home/assigment/create}" method="post">
             <label>
                 <input name="clientId" required="required" type="number"/>
             </label>
             <label>
                 <select name="couponId" required="required">
                     <option th:each="couponOp : ${couponList}" th:value="${couponOp.id}"
-                            th:text="'ID: ' + ${couponOp.id} + ', PREZIOA: ' + ${couponOp.price} + '€'"></option>
+                            th:text="'Kupoiaren ID: ' + ${couponOp.id} + ', PREZIOA: ' + ${couponOp.price} + '€'"></option>
                 </select>
             </label>
-            <button type="submit">Kupoiak esleitu!</button>
+            <button type="submit" class="u-btn u-btn-submit u-button-style">Kupoiak esleitu!</button>
+            <p th:if="${errorCreatingAssigment} == true" style="color:red;">Ezin da salmenta burutu! Ez dago stock nahikorik, edo gehienezko kopoi kopurua gainditu da!</p>
+            <p th:if="${assigmentCreated} == true" style="color:green;">Salmenta ondo burutu da!</p>
         </form>
     </div>
 </section>
-<section class="u-align-center u-clearfix u-palette-1-light-3 u-section-2" id="sec-7567">
-    <div class="u-clearfix u-sheet u-sheet-1">
-        <div class="u-expanded-width u-form u-form-1">
-            <form action="#" method="POST" class="u-clearfix u-form-horizontal u-form-spacing-15 u-inner-form"
-                  style="padding: 15px;" source="custom">
-                <div class="u-form-group u-form-group-1">
-                    <label for="name-558c" class="u-form-control-hidden u-label"></label>
-                    <input id="name-558c" name="name"
-                           class="u-border-2 u-border-black u-input u-input-rectangle u-palette-1-light-3 u-input-1"
-                           required="required" type="text" placeholder="Izena">
-                </div>
-                <div class="u-form-group u-form-group-2">
-                    <label for="email-558c" class="u-form-control-hidden u-label"></label>
-                    <input placeholder="Deskripzioa" id="email-558c" name="email"
-                           class="u-border-2 u-border-black u-input u-input-rectangle u-palette-1-light-3 u-input-2"
-                           required="required" type="text">
-                </div>
-                <div class="u-form-date u-form-group u-form-group-3">
-                    <label for="date-a92f" class="u-form-control-hidden u-label">Date</label>
-                    <input type="date" placeholder="" id="date-a92f" name="date"
-                           class="u-border-2 u-border-black u-input u-input-rectangle u-palette-1-light-3 u-input-3"
-                           required="">
-                </div>
-                <div class="u-form-group u-form-submit u-form-group-4">
-                    <a href="#" class="u-btn u-btn-submit u-button-style">Sartu</a>
-                    <input type="submit" value="submit" class="u-form-control-hidden">
-                </div>
-                <div class="u-form-send-message u-form-send-success">Eskerrik asko! Zure kupoia ondo gorde da.</div>
-                <div class="u-form-send-error u-form-send-message">Ezin izan da zure kupoia gorde. Mesedez akatsak
-                    zuzendu eta saiatu berriz.
-                </div>
-                <input type="hidden" value="" name="recaptchaResponse">
-            </form>
-        </div>
-    </div>
-</section>
+
 
 
 <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-7eda">

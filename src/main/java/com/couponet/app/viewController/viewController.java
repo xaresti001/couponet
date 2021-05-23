@@ -38,9 +38,16 @@ public class viewController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String viewLogin(@RequestParam(name = "registrationError", required = false, defaultValue = "false") boolean registrationError,
                             ModelMap modelMap){
-        modelMap.addAttribute("newUser", new User());
-        modelMap.addAttribute("registrationError", registrationError);
-        return "login";
+        User loggedUser = userService.getLoggedUser();
+        if (loggedUser == null){
+            modelMap.addAttribute("newUser", new User());
+            modelMap.addAttribute("registrationError", registrationError);
+            return "login";
+        }
+        else{
+            return "redirect:/panel/home";
+        }
+
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -61,6 +68,8 @@ public class viewController {
 
     @RequestMapping(value = "/panel/home", method = RequestMethod.GET)
     public String viewPanel(ModelMap modelMap,
+                            @RequestParam(name = "assigmentDeleted", required = false, defaultValue = "false") boolean assigmentDeleted,
+                            @RequestParam(name = "couponDeleted", required = false, defaultValue = "false") boolean couponDeleted,
                             @RequestParam(name = "errorCreatingAssigment", required = false, defaultValue = "false") boolean errorCreatingAssigment,
                             @RequestParam(name = "assigmentCreated", required = false, defaultValue = "false") boolean assigmentCreated,
                             @RequestParam(name = "errorDeletingCoupon", required = false, defaultValue = "false") boolean errorDeletingCoupon,
@@ -81,6 +90,8 @@ public class viewController {
             }
 
             // Error messages
+            modelMap.addAttribute("assigmentDeleted", assigmentDeleted);
+            modelMap.addAttribute("couponDeleted", couponDeleted);
             modelMap.addAttribute("errorCreatingAssigment", errorCreatingAssigment);
             modelMap.addAttribute("assigmentCreated", assigmentCreated);
             modelMap.addAttribute("errorDeletingCoupon", errorDeletingCoupon);
@@ -102,7 +113,7 @@ public class viewController {
         if (loggedUser != null && coupon != null){
             couponService.deleteCouponById(couponId);
             modelMap.clear();
-            return "redirect:/panel/home";
+            return "redirect:/panel/home?couponDeleted=true";
         }
         else{
             return "redirect:/panel/home?errorDeletingCoupon=true";
@@ -135,7 +146,7 @@ public class viewController {
         if (loggedUser != null && assigment != null){
             assigmentService.deleteAssigmentById(assigmentId);
             modelMap.clear();
-            return "redirect:/panel/home";
+            return "redirect:/panel/home?assigmentDeleted=true";
         }
         else{
             return "redirect:/panel/home?errorDeletingAssigment=true";
