@@ -6,7 +6,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="page_type" content="np-template-header-footer-from-plugin">
-    <title>Users</title>
+    <title>Aginte Panela</title>
     <link rel="stylesheet" href="/nicepage.css" media="screen">
     <link rel="stylesheet" href="/Users.css" media="screen">
     <script class="u-script" type="text/javascript" src="/jquery.js" defer=""></script>
@@ -149,7 +149,7 @@
                         class="u-border-2 u-border-grey-75 u-border-no-left u-border-no-right u-table-cell"></td>
                     <td th:text="${coupon.maxPerUser}"
                         class="u-border-2 u-border-grey-75 u-border-no-left u-border-no-right u-table-cell"></td>
-                    <td th:text="${coupon.registrationTime}"
+                    <td th:text="${#temporals.format(coupon.registrationTime, 'dd-MM-yyyy HH:mm')}"
                         class="u-border-2 u-border-grey-75 u-border-no-left u-border-no-right u-table-cell"></td>
                     <td class="u-border-2 u-border-grey-75 u-border-no-left u-border-no-right u-table-cell">
                         <form th:action="@{/panel/home/coupon/delete}" method="post">
@@ -216,7 +216,7 @@
                         class="u-border-2 u-border-grey-75 u-border-no-left u-border-no-right u-table-cell"></td>
                     <td th:text="${assigment.coupon.price}"
                         class="u-border-2 u-border-grey-75 u-border-no-left u-border-no-right u-table-cell"></td>
-                    <td th:text="${assigment.registrationDateTime}"
+                    <td th:text="${#temporals.format(assigment.registrationDateTime, 'dd-MM-yyyy HH:mm')}"
                         class="u-border-2 u-border-grey-75 u-border-no-left u-border-no-right u-table-cell"></td>
                     <td class="u-border-2 u-border-grey-75 u-border-no-left u-border-no-right u-table-cell">
                         <form th:action="@{/panel/home/assigment/delete}" method="post">
