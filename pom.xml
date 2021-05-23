@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>CoupoNet App</name>
     <description>CoupoNet WebApp</description>
+    <packaging>war</packaging>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -70,10 +71,16 @@
             <artifactId>spring-security-config</artifactId>
             <version>5.4.6</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 
     <build>
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
