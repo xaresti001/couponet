@@ -37,11 +37,13 @@ public class viewController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String viewLogin(@RequestParam(name = "registrationError", required = false, defaultValue = "false") boolean registrationError,
+                            @RequestParam(name = "loginError", required = false, defaultValue = "false") boolean loginError,
                             ModelMap modelMap){
         User loggedUser = userService.getLoggedUser();
         if (loggedUser == null){
             modelMap.addAttribute("newUser", new User());
             modelMap.addAttribute("registrationError", registrationError);
+            modelMap.addAttribute("loginError", loginError);
             return "login";
         }
         else{
